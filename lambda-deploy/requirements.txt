@@ -1,7 +1,7 @@
-
-
-
+# NOTE: This requirements.txt is intended only for the virtual environment used to deploy the Lambda function.
+# Do not use this environment or file for Databricks ETL processing.
 langchain
+langchain-community
 openai
 faiss-cpu==1.7.4
 tiktoken
