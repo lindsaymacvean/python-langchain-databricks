@@ -1,5 +1,3 @@
-
-
 #!/bin/bash
 
 PROFILE=$1
@@ -8,6 +6,10 @@ if [ -z "$PROFILE" ]; then
   echo "Usage: ./deploy.sh <aws-profile-name>"
   exit 1
 fi
+
+ # Ensure you're in the correct virtual environment before running this script
+echo "Installing Python dependencies from requirements.txt"
+pip install -r requirements.txt
 
 echo "Building SAM application with profile: $PROFILE"
 sam build --use-container --profile "$PROFILE"

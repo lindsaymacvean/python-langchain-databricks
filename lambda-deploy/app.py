@@ -1,12 +1,13 @@
 import os
 import boto3
 import tempfile
+import json
 from botocore.exceptions import ClientError
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage
+from langchain_community.chat_models import ChatOpenAI
 
 s3 = boto3.client("s3")
 
@@ -19,14 +20,16 @@ def download_faiss_index(tmpdir):
         s3.download_file(BUCKET_NAME, f"{FAISS_INDEX_PREFIX}/{file}", os.path.join(tmpdir, file))
 
 def load_faiss_index(tmpdir):
-    embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    return FAISS.load_local(tmpdir, embedding_model)
+    load_dotenv()
+    embedding_model = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
+    return FAISS.load_local(tmpdir, embedding_model, allow_dangerous_deserialization=True)
 
 def get_openai_api_key(secret_name="OpenAIApiKey", region_name="eu-west-1"):
     client = boto3.client("secretsmanager", region_name=region_name)
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
-        return get_secret_value_response["SecretString"]
+        import json
+        return json.loads(get_secret_value_response["SecretString"])["OPENAI_API_KEY"]
     except ClientError as e:
         raise Exception(f"Unable to retrieve OpenAI API key: {e}")
 

@@ -33,6 +33,11 @@ Resources:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${AWS::StackName}-processed/*"
         - CloudWatchLogsFullAccess
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:eu-west-1:203712223134:secret:OpenAIApiKey-*
       Environment:
         Variables:
           PROCESSED_BUCKET: !Sub "${AWS::StackName}-processed"

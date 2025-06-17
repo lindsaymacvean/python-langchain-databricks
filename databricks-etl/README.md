@@ -1,3 +1,6 @@
+Get an OpenAI API Key and put it into env as
+`OPENAI_API_KEY=`
+
 Install required packages:
 
 ```bash
