@@ -1,0 +1,9 @@
+
+
+
+langchain
+openai
+faiss-cpu==1.7.4
+tiktoken
+boto3
+numpy==1.24.4

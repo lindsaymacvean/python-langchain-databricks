@@ -18,4 +18,9 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Deploying SAM application with profile: $PROFILE"
-sam deploy --guided --profile "$PROFILE"
+sam deploy \
+--stack-name python-langchain-databricks-demo \
+--region eu-west-1 \
+--s3-bucket aws-sam-cli-managed-default-samclisourcebucket-daxmxemgurif \
+--profile "$PROFILE" \
+--capabilities CAPABILITY_IAM

@@ -1,5 +1,6 @@
 .venv/
 venv-deploy/
+venv-databricks/
 .aws-sam/
 samconfig.toml
 .env
