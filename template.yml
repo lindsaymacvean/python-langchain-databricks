@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: LangChain Python Lambda for querying medical trial data using preprocessed embeddings.
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    MemorySize: 256
+
+Resources:
+
+  UploadBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-upload"
+
+  ProcessedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-processed"
+
+  LangChainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: langchain-query
+      Handler: app.lambda_handler
+      CodeUri: .
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${AWS::StackName}-processed/*"
+        - CloudWatchLogsFullAccess
+      Environment:
+        Variables:
+          PROCESSED_BUCKET: !Sub "${AWS::StackName}-processed"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /query
+            Method: post
