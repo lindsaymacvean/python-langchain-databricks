@@ -1,5 +1,3 @@
-
-
 Install required packages:
 
 ```bash
@@ -27,6 +25,15 @@ To build and deploy the project using a single command, run the following:
 ```bash
 ./deploy.sh <your aws profile> <stackname>
 ```
+
+### 🔐 Secrets Manager Configuration
+
+This Lambda function expects an OpenAI API key to be stored in AWS Secrets Manager.
+
+**Secret Name:** `OpenAI_API_Key_Secret`  
+**Key Name within the Secret:** `OPENAI_API_KEY`
+
+The Lambda function will fetch this secret during initialization, so no manual injection of the key during deployment is necessary.
 
 ## Test the function
 
